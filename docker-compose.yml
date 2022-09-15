@@ -1,0 +1,81 @@
+version: '3'
+services:
+  telegraf:
+    image: telegraf
+    restart: always
+    volumes:
+      - ./config/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+    depends_on:
+      - influxdb
+    links:
+      - influxdb
+    ports:
+      - '8125:8125'
+  influxdb:
+    platform: linux/amd64
+    image: influxdb:1.8.10-alpine
+    restart: always
+    environment:
+      - INFLUXDB_DB=influx
+      - INFLUXDB_ADMIN_USER=admin
+      - INFLUXDB_ADMIN_PASSWORD=admin
+    ports:
+      - '8086:8086'
+    volumes:
+      - influxdb_data:/var/lib/influxdb
+  grafana:
+    image: grafana/grafana
+    restart: always
+    depends_on:
+      - influxdb
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_INSTALL_PLUGINS=
+    links:
+      - influxdb
+    ports:
+      - '3000:3000'
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./config/grafana/provisioning/:/etc/grafana/provisioning/
+
+  nginx:
+    build:
+      context: ./build/nginx/
+      dockerfile: Dockerfile
+      args:
+        POWERWALL_IP: ${POWERWALL_IP}
+        GATEWAY_SERVER_NAME: ${COOKIEBASEURL}
+        COOKIEBASEURL: ${COOKIEBASEURL}
+        EMAIL: ${EMAIL}
+        USERNAME: ${USERNAME}
+        PASSWD: ${PASSWD}
+        URL: ${URL}
+    depends_on:
+      - php
+    expose:
+      - 80
+    ports:  
+      - 80:80  
+    links:  
+      - php  
+    volumes:  
+      - ./logs/nginx:/var/log/nginx/
+
+  php:
+    image: php:8.0-fpm
+    build:
+      context: ./build/php/
+      dockerfile: Dockerfile
+    expose:  
+      - 9000  
+    volumes:  
+      - ./logs/php/php.log:/var/log/fpm-php.www.log
+      - ./config/php-fpm.d/www.conf:/usr/local/etc/php-fpm.d/www.conf
+
+volumes:
+  grafana_data: {}
+  influxdb_data: {}
+
+

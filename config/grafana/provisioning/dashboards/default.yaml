@@ -1,0 +1,9 @@
+apiVersion: 1
+providers:
+- name: InfluxDB
+  folder: 'WickedCats'
+  type: file
+  disableDeletion: false
+  editable: false
+  options:
+    path: /etc/grafana/provisioning/dashboards

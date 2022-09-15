@@ -1,0 +1,12 @@
+{
+    "name": "jtangas/gateway_api",
+    "autoload": {
+        "psr-4": {
+            "Jtangas\\GatewayApi\\": "src/"
+        }
+    },
+    "require": {
+        "ext-json": "*",
+        "guzzlehttp/guzzle": "^7.3"
+    }
+}

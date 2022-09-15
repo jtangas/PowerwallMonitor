@@ -1,0 +1,13 @@
+apiVersion: 1
+datasources:
+  - name: WickedCats
+    url: http://influxdb:8086
+    user: admin
+    password: admin
+    type: influxdb
+    access: proxy
+    database: influx
+    jsonData:
+      httpMode: GET
+    isDefault: true
+    editable: true
