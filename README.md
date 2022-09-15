@@ -11,11 +11,11 @@ This application uses, nginx, php, telegraph, influxdb, and grafana.
 ---
 1. Clone this repository
 ```sh
-$ git clone https://github.com/jtangas/gateway-monitor
+$ git clone https://github.com/jtangas/PowerwallMonitor
 ```
 2. navigate to the cloned repository
 ```sh
-$ cd gateway-monitor
+$ cd PowerwallMonitor
 ```
 3. Edit the [environment settings](#environment-config) in the `config/.env` file to match your Gateway and your network.
 4. Run the containers
